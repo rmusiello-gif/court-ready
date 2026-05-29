@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Court Ready">
+<meta name="theme-color" content="#0a0a0a">
+<title>Court Ready</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand: #e8d5b0;
+    --sand-dark: #c4a96a;
+    --court: #1a6b3a;
+    --court-light: #2d8f52;
+    --bg: #0a0a0a;
+    --bg2: #141414;
+    --bg3: #1e1e1e;
+    --bg4: #282828;
+    --text: #f0ece4;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #e8d5b0;
+    --red: #e05252;
+    --purple: #8b7fc7;
+    --teal: #4db89e;
+    --amber: #d4934a;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    overflow: hidden;
+    user-select: none;
+  }
+
+  #app {
+    height: 100vh;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* Header */
+  .header {
+    padding: calc(var(--safe-top) + 16px) 20px 16px;
+    background: var(--bg);
+    border-bottom: 1px solid #1e1e1e;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    color: var(--sand);
+    line-height: 1;
+  }
+
+  .logo span {
+    color: var(--court-light);
+  }
+
+  .day-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    background: var(--bg3);
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 1px;
+  }
+
+  /* Nav tabs */
+  .nav {
+    display: flex;
+    background: var(--bg2);
+    border-bottom: 1px solid #1e1e1e;
+    flex-shrink: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 12px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-tab.active {
+    color: var(--sand);
+    border-bottom-color: var(--sand);
+  }
+
+  .nav-tab .dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-right: 6px;
+    vertical-align: middle;
+    margin-bottom: 1px;
+  }
+
+  /* Main scroll area */
+  .main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(var(--safe-bottom) + 20px);
+  }
+
+  /* Section header */
+  .section-hero {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid #1e1e1e;
+  }
+
+  .section-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: var(--text);
+  }
+
+  .section-title .accent { color: var(--sand); }
+
+  .section-desc {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .duration-row {
+    display: flex;
+    gap: 12px;
+    margin-top: 14px;
+  }
+
+  .duration-pill {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Exercise blocks */
+  .block {
+    margin: 16px 20px 0;
+  }
+
+  .block-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .block-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #222;
+  }
+
+  .exercise-card {
+    background: var(--bg2);
+    border: 1px solid #222;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .exercise-card:active {
+    border-color: var(--sand-dark);
+  }
+
+  .exercise-top {
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .exercise-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--text-dim);
+    line-height: 1;
+    min-width: 28px;
+    margin-top: 2px;
+  }
+
+  .exercise-info { flex: 1; }
+
+  .exercise-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1.2;
+    margin-bottom: 3px;
+  }
+
+  .exercise-why {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    font-weight: 300;
+  }
+
+  .exercise-meta {
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .sets-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--sand);
+    background: rgba(232, 213, 176, 0.08);
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .exercise-cue {
+    padding: 0 16px 12px 56px;
+    font-size: 12px;
+    color: var(--court-light);
+    font-style: italic;
+    line-height: 1.4;
+    font-weight: 300;
+  }
+
+  .video-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 16px 14px 56px;
+    padding: 8px 14px;
+    background: rgba(232, 213, 176, 0.06);
+    border: 1px solid rgba(232, 213, 176, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.2s;
+  }
+
+  .video-btn:active {
+    background: rgba(232, 213, 176, 0.12);
+  }
+
+  .video-icon {
+    width: 20px;
+    height: 20px;
+    background: #e52d27;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .video-icon::after {
+    content: '';
+    border-left: 7px solid white;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    margin-left: 2px;
+  }
+
+  .video-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    flex: 1;
+  }
+
+  .video-arrow {
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  /* Schedule view */
+  .week-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    padding: 20px;
+  }
+
+  .day-cell {
+    background: var(--bg2);
+    border: 1px solid #222;
+    border-radius: 10px;
+    padding: 10px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .day-cell.active-day {
+    border-color: var(--sand-dark);
+    background: rgba(232, 213, 176, 0.06);
+  }
+
+  .day-cell:active { transform: scale(0.95); }
+
+  .day-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+
+  .day-icon { font-size: 18px; margin-bottom: 4px; }
+
+  .day-type {
+    font-size: 9px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .schedule-cards {
+    padding: 0 20px;
+  }
+
+  .sched-card {
+    background: var(--bg2);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .sched-card:active { border-color: var(--sand-dark); }
+
+  .sched-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .sched-info { flex: 1; }
+
+  .sched-day {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+    margin-bottom: 3px;
+  }
+
+  .sched-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 2px;
+  }
+
+  .sched-detail {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 300;
+  }
+
+  .sched-arrow {
+    color: var(--text-dim);
+    font-size: 18px;
+  }
+
+  /* Tips view */
+  .tip-card {
+    margin: 12px 20px 0;
+    background: var(--bg2);
+    border: 1px solid #222;
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .tip-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px;
+    color: #222;
+    line-height: 1;
+    margin-bottom: -4px;
+  }
+
+  .tip-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .tip-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  /* Color tokens */
+  .c-beach { color: var(--purple); }
+  .bg-beach { background: rgba(139, 127, 199, 0.12); }
+  .c-power { color: var(--red); }
+  .bg-power { background: rgba(224, 82, 82, 0.12); }
+  .c-strength { color: var(--teal); }
+  .bg-strength { background: rgba(77, 184, 158, 0.12); }
+  .c-saq { color: var(--amber); }
+  .bg-saq { background: rgba(212, 147, 74, 0.12); }
+  .c-recovery { color: var(--text-dim); }
+  .bg-recovery { background: rgba(255,255,255,0.04); }
+  .c-rest { color: var(--text-dim); }
+  .bg-rest { background: rgba(255,255,255,0.03); }
+
+  /* Hidden sections */
+  .view { display: none; }
+  .view.active { display: block; }
+
+  /* Divider */
+  .spacer { height: 20px; }
+
+  /* Morning note box */
+  .morning-box {
+    margin: 16px 20px 0;
+    background: linear-gradient(135deg, rgba(26, 107, 58, 0.3), rgba(45, 143, 82, 0.1));
+    border: 1px solid rgba(45, 143, 82, 0.4);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .morning-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--court-light);
+    margin-bottom: 6px;
+  }
+
+  .morning-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 1px;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  .morning-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.5;
+    font-weight: 300;
+  }
+
+  .morning-steps {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .morning-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .morning-step-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--court-light);
+    min-width: 18px;
+    margin-top: 1px;
+  }
+
+  .morning-step-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    font-weight: 300;
+    line-height: 1.4;
+  }
+
+  .morning-step-text strong {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="header">
+    <div class="logo">COURT<span>READY</span></div>
+    <div class="day-chip" id="current-day">TODAY</div>
+  </div>
+
+  <div class="nav">
+    <div class="nav-tab active" onclick="showView('schedule')" id="tab-schedule">
+      <span class="dot" style="background:#888"></span>SCHEDULE
+    </div>
+    <div class="nav-tab" onclick="showView('tuesday')" id="tab-tuesday">
+      <span class="dot" style="background:var(--red)"></span>TUE
+    </div>
+    <div class="nav-tab" onclick="showView('thursday')" id="tab-thursday">
+      <span class="dot" style="background:var(--teal)"></span>THU
+    </div>
+    <div class="nav-tab" onclick="showView('friday')" id="tab-friday">
+      <span class="dot" style="background:var(--amber)"></span>FRI
+    </div>
+    <div class="nav-tab" onclick="showView('prewarm')" id="tab-prewarm">
+      <span class="dot" style="background:var(--purple)"></span>PRE-PLAY
+    </div>
+    <div class="nav-tab" onclick="showView('tips')" id="tab-tips">
+      <span class="dot" style="background:var(--sand-dark)"></span>KEYS
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- SCHEDULE VIEW -->
+    <div class="view active" id="view-schedule">
+      <div class="section-hero">
+        <div class="section-tag">WEEKLY PLAN</div>
+        <div class="section-title">YOUR <span class="accent">WEEK</span></div>
+        <div class="section-desc">Tap any session to open the full program.</div>
+      </div>
+
+      <div class="week-grid">
+        <div class="day-cell" onclick="showView('prewarm')">
+          <div class="day-name">MON</div>
+          <div class="day-icon">🎾</div>
+          <div class="day-type c-beach">Beach + Pre-play</div>
+        </div>
+        <div class="day-cell" onclick="showView('tuesday')">
+          <div class="day-name">TUE</div>
+          <div class="day-icon">⚡</div>
+          <div class="day-type c-power">Power</div>
+        </div>
+        <div class="day-cell" onclick="showView('prewarm')">
+          <div class="day-name">WED</div>
+          <div class="day-icon">🎾</div>
+          <div class="day-type c-beach">Beach + Pre-play</div>
+        </div>
+        <div class="day-cell" onclick="showView('thursday')">
+          <div class="day-name">THU</div>
+          <div class="day-icon">💪</div>
+          <div class="day-type c-strength">Strength</div>
+        </div>
+        <div class="day-cell" onclick="showView('friday')">
+          <div class="day-name">FRI</div>
+          <div class="day-icon">🔥</div>
+          <div class="day-type c-saq">SAQ</div>
+        </div>
+        <div class="day-cell">
+          <div class="day-name">SAT</div>
+          <div class="day-icon">🚶</div>
+          <div class="day-type c-recovery">Active rec.</div>
+        </div>
+        <div class="day-cell">
+          <div class="day-name">SUN</div>
+          <div class="day-icon">😴</div>
+          <div class="day-type c-rest">Full rest</div>
+        </div>
+      </div>
+
+      <div class="schedule-cards">
+        <div class="sched-card" onclick="showView('prewarm')">
+          <div class="sched-icon bg-beach">🎾</div>
+          <div class="sched-info">
+            <div class="sched-day">MON & WED</div>
+            <div class="sched-title">Beach Tennis + Pre-Play Warm-up</div>
+            <div class="sched-detail">15 min before play · Split step + drop step</div>
+          </div>
+          <div class="sched-arrow">›</div>
+        </div>
+        <div class="sched-card" onclick="showView('tuesday')">
+          <div class="sched-icon bg-power">⚡</div>
+          <div class="sched-info">
+            <div class="sched-day">TUESDAY</div>
+            <div class="sched-title">Power & Backward Movement</div>
+            <div class="sched-detail">45 min · Drop step, bounds, hip thrust</div>
+          </div>
+          <div class="sched-arrow">›</div>
+        </div>
+        <div class="sched-card" onclick="showView('thursday')">
+          <div class="sched-icon bg-strength">💪</div>
+          <div class="sched-info">
+            <div class="sched-day">THURSDAY</div>
+            <div class="sched-title">Sand Strength</div>
+            <div class="sched-detail">45 min · Split squat, RDL, Nordic curl</div>
+          </div>
+          <div class="sched-arrow">›</div>
+        </div>
+        <div class="sched-card" onclick="showView('friday')">
+          <div class="sched-icon bg-saq">🔥</div>
+          <div class="sched-info">
+            <div class="sched-day">FRIDAY</div>
+            <div class="sched-title">Agility & Reaction</div>
+            <div class="sched-detail">30 min · Ball drops, shadowing, 5-10-5</div>
+          </div>
+          <div class="sched-arrow">›</div>
+        </div>
+      </div>
+
+      <div class="morning-box">
+        <div class="morning-label">EVERY MORNING · 5 MIN</div>
+        <div class="morning-title">DAILY MOBILITY RITUAL</div>
+        <div class="morning-text">Non-negotiable. Do this every day, even rest days.</div>
+        <div class="morning-steps">
+          <div class="morning-step">
+            <div class="morning-step-num">01</div>
+            <div class="morning-step-text"><strong>90/90 Hip Switch</strong> — 2 × 10 switches</div>
+          </div>
+          <div class="morning-step">
+            <div class="morning-step-num">02</div>
+            <div class="morning-step-text"><strong>Ankle Wall Mobilization</strong> — 2 × 10 per side</div>
+          </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- TUESDAY VIEW -->
+    <div class="view" id="view-tuesday">
+      <div class="section-hero">
+        <div class="section-tag">TUESDAY · 45 MIN</div>
+        <div class="section-title">POWER & <span class="accent">BACKWARD</span></div>
+        <div class="section-desc">Your #1 priority. Drop step pattern first, then load it with strength work.</div>
+        <div class="duration-row">
+          <span class="duration-pill" style="background:rgba(224,82,82,0.12);color:var(--red)">Warm-up 10 min</span>
+          <span class="duration-pill" style="background:rgba(232,213,176,0.08);color:var(--sand)">Main 35 min</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--text-dim)">WARM-UP</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">01</div>
+            <div class="exercise-info">
+              <div class="exercise-name">90/90 Hip Switch</div>
+              <div class="exercise-why">Opens the hip range your drop step needs</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">2×10</span></div>
+          </div>
+          <div class="exercise-cue">→ Tall spine, rotate from hip not lumbar</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=t4Zz6-aG8Iw" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">90/90 Hip Stretch Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">02</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Ankle Wall Mobilization</div>
+              <div class="exercise-why">Stiff ankles limit how deep you can get in ready position</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">2×10/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Drive knee over pinky toe, keep heel on floor</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=6HwiyGJrfxI" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Ankle Dorsiflexion Wall Taps</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">03</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Hip Flexor Lunge + Rotation</div>
+              <div class="exercise-why">Tight hip flexors restrict your backward stride length</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">2×8/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Push hips forward, reach opposite arm overhead and rotate</div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--red)">MAIN WORK · BACKWARD MOVEMENT</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">01</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Drop Step to Back Corner</div>
+              <div class="exercise-why">Your single biggest gap. Walk it first, jog, then sprint. This is the exact movement that beats you.</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">6×4/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Pivot foot stays planted, opposite hip opens FIRST</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=FCfhEpfhLiM" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">FIBA Drop Step Footwork Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">02</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Crossover Backpedal</div>
+              <div class="exercise-why">Moving back while keeping eyes forward — simulates watching ball as you retreat</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">5×5m/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Cross lead foot BEHIND, not in front — most players get this wrong</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=efQLNVcbacY" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Backpedal to Sprint Change of Direction</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">03</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Backward Diagonal Bound</div>
+              <div class="exercise-why">Explosive version of the retreat — builds power to cover back corners fast</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">4×5/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Push off inside foot, land soft on outside foot</div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">04</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Single-Leg Hip Thrust (slow eccentric)</div>
+              <div class="exercise-why">Builds the deceleration strength to actually stop moving backward without stumbling</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">4×8/side</span></div>
+          </div>
+          <div class="exercise-cue">→ 3-sec lower, 1-sec pause at bottom. Full hip lock at top.</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=L4nTaesNm0E" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Single Leg Hip Thrust Full Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">05</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Reverse Lunge to Knee Drive</div>
+              <div class="exercise-why">Mimics stop-going-back and explode-forward cycle</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">4×8/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Drive knee up explosively on return — simulate pushing off to net</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- THURSDAY VIEW -->
+    <div class="view" id="view-thursday">
+      <div class="section-hero">
+        <div class="section-tag">THURSDAY · 45 MIN</div>
+        <div class="section-title">SAND <span class="accent">STRENGTH</span></div>
+        <div class="section-desc">Strength is the engine for agility. No foundation = no acceleration or deceleration on sand.</div>
+        <div class="duration-row">
+          <span class="duration-pill" style="background:rgba(77,184,158,0.12);color:var(--teal)">Warm-up 10 min</span>
+          <span class="duration-pill" style="background:rgba(232,213,176,0.08);color:var(--sand)">Main 35 min</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--text-dim)">WARM-UP · Same as Tuesday</div>
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">—</div>
+            <div class="exercise-info">
+              <div class="exercise-name">90/90 Hip Switch + Ankle Wall Mob + Hip Flexor Lunge</div>
+              <div class="exercise-why">Same warm-up sequence as Tuesday — 10 min total</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--teal)">MAIN WORK · STRENGTH</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">01</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Bulgarian Split Squat</div>
+              <div class="exercise-why">Unilateral strength + hip flexor length — improves stride length directly</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">4×8/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Front shin stays vertical, drive through heel</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=l8H8AU-PPMU" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Perfect Bulgarian Split Squat Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">02</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Single-Leg Romanian Deadlift</div>
+              <div class="exercise-why">Hip hinge strength — anchors your base when planting to change direction</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×10/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Hinge at hip, feel hamstring load, don't round spine</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=Zfr6wizR8rs" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Best Single-Leg RDL Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">03</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Lateral Band Walk</div>
+              <div class="exercise-why">Hip abductor strength — stabilizes knee during wide lateral back steps</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×15/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Stay low, toes forward, don't lean the torso</div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">04</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Nordic Curl</div>
+              <div class="exercise-why">Hamstring injury prevention — #1 tissue at risk in explosive athletes</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×5</span></div>
+          </div>
+          <div class="exercise-cue">→ Slow eccentric only. Use hands to push up on the way back.</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=_e9vFU9-tkc" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Nordic Hamstring Curl Setup & Progressions</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">05</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Single-Leg Calf Raise (slow)</div>
+              <div class="exercise-why">Achilles and ankle stiffness — the spring that makes you quick on sand</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×15/side</span></div>
+          </div>
+          <div class="exercise-cue">→ 3-sec rise, pause at top, 3-sec lower</div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- FRIDAY VIEW -->
+    <div class="view" id="view-friday">
+      <div class="section-hero">
+        <div class="section-tag">FRIDAY · 30 MIN</div>
+        <div class="section-title">AGILITY & <span class="accent">REACTION</span></div>
+        <div class="section-desc">Quality over volume. Stop the set the moment speed degrades. Rest 90 sec between every agility rep.</div>
+        <div class="duration-row">
+          <span class="duration-pill" style="background:rgba(212,147,74,0.12);color:var(--amber)">Warm-up 5 min</span>
+          <span class="duration-pill" style="background:rgba(232,213,176,0.08);color:var(--sand)">Main 25 min</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--amber)">MAIN WORK · AGILITY & REACTION</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">01</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Ball Drop Reaction Drill</div>
+              <div class="exercise-why">Pure reflex training. Partner drops ball from shoulder height — catch before second bounce. Boring but it works.</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×10</span></div>
+          </div>
+          <div class="exercise-cue">→ Stand 3m away. Full attention — stop if focus drifts</div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">02</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Shadowing with Directional Signal</div>
+              <div class="exercise-why">Partner points to a corner — you move there and return to center. Trains the read-and-move reflex loop.</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">6×20s</span></div>
+          </div>
+          <div class="exercise-cue">→ Rest 90 sec between sets. Max intensity — don't jog through it</div>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">03</div>
+            <div class="exercise-info">
+              <div class="exercise-name">5-10-5 Pro Agility Drill</div>
+              <div class="exercise-why">Best drill for lateral quickness. Direct transfer to court width in beach tennis.</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">5 reps</span></div>
+          </div>
+          <div class="exercise-cue">→ Low hips, sharp cuts, push don't round. Full rest between each.</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=SyGC4HA8Les" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Pro Agility 5-10-5 Drill Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- PRE-PLAY WARM-UP VIEW -->
+    <div class="view" id="view-prewarm">
+      <div class="section-hero">
+        <div class="section-tag">MON & WED · 15 MIN BEFORE PLAY</div>
+        <div class="section-title">PRE-PLAY <span class="accent">WARM-UP</span></div>
+        <div class="section-desc">Do this before you play. Treat it as your warm-up, not an add-on.</div>
+        <div class="duration-row">
+          <span class="duration-pill" style="background:rgba(139,127,199,0.12);color:var(--purple)">15 min total</span>
+          <span class="duration-pill" style="background:rgba(232,213,176,0.08);color:var(--sand)">Then play</span>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--purple)">MOBILITY ACTIVATION</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">01</div>
+            <div class="exercise-info">
+              <div class="exercise-name">90/90 Hip Switch</div>
+              <div class="exercise-why">Unlocks hip rotation for the drop step</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">2×10</span></div>
+          </div>
+          <div class="exercise-cue">→ Tall spine, rotate from hip not trunk</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=t4Zz6-aG8Iw" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">90/90 Hip Stretch Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">02</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Ankle Wall Mobilization</div>
+              <div class="exercise-why">Fixes flat-footedness at baseline before the point starts</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">2×10/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Drive knee over pinky toe, heel stays on floor</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=6HwiyGJrfxI" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">Ankle Dorsiflexion Wall Taps</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="block">
+        <div class="block-label" style="color:var(--purple)">ANTICIPATION RESET</div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">03</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Split-Step Wall Drill</div>
+              <div class="exercise-why">Hit the wall — the moment ball hits back, split-step. Trains the reflex without a partner.</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3×10</span></div>
+          </div>
+          <div class="exercise-cue">→ Land at the EXACT moment of contact — not before, not after</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=Q5Hrn8y-nJA" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">3-Step Split Step Progression</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+
+        <div class="exercise-card">
+          <div class="exercise-top">
+            <div class="exercise-num">04</div>
+            <div class="exercise-info">
+              <div class="exercise-name">Drop Step to Cone (pattern groove)</div>
+              <div class="exercise-why">Just 3 reps per side — grooves the movement before you play</div>
+            </div>
+            <div class="exercise-meta"><span class="sets-badge">3/side</span></div>
+          </div>
+          <div class="exercise-cue">→ Walk it. Don't rush. Pattern before speed.</div>
+          <a class="video-btn" href="https://www.youtube.com/watch?v=FCfhEpfhLiM" target="_blank">
+            <div class="video-icon"></div>
+            <span class="video-label">FIBA Drop Step Footwork Tutorial</span>
+            <span class="video-arrow">↗</span>
+          </a>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+
+    <!-- TIPS VIEW -->
+    <div class="view" id="view-tips">
+      <div class="section-hero">
+        <div class="section-tag">COACHING KEYS</div>
+        <div class="section-title">THE <span class="accent">ESSENTIALS</span></div>
+        <div class="section-desc">What separates players who get faster from those who just train harder.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">01</div>
+        <div class="tip-title">The drop step is a technique, not fitness</div>
+        <div class="tip-text">Your backward movement weakness is the pivot pattern — not your conditioning. Walk it slowly first. Speed comes after the pattern is clean. Adding speed before that just ingrains the wrong movement.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">02</div>
+        <div class="tip-title">Rest fully between agility sets</div>
+        <div class="tip-text">90–120 seconds between every agility rep. Fatigued agility training becomes cardio — you'll get slower, not faster. When in doubt, rest more.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">03</div>
+        <div class="tip-title">Split step timing is everything</div>
+        <div class="tip-text">Land at the EXACT moment your opponent's racket contacts the ball. Not before (you'll commit too early), not after (you'll be flat). This is the single biggest fix for flat-footedness.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">04</div>
+        <div class="tip-title">Read the shoulder, not the ball</div>
+        <div class="tip-text">Your opponent's shoulder rotation tells you where the ball is going 0.2–0.3 seconds earlier than watching the racket or ball. Train yourself to scan their shoulders during the swing.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">05</div>
+        <div class="tip-title">5 min of hip + ankle mobility every morning</div>
+        <div class="tip-text">90/90 hip switch + ankle wall mobilization. Every day, even rest days. This unlocks the hip range your drop step needs. You'll feel the difference in 2 weeks.</div>
+      </div>
+
+      <div class="tip-card">
+        <div class="tip-num">06</div>
+        <div class="tip-title">Progress in 3-week blocks</div>
+        <div class="tip-text">Weeks 1–2: learn the pattern at 50–70% speed. Week 3: full intensity. Week 4: deload at 50% volume. Adaptation happens in the deload — don't skip it.</div>
+      </div>
+
+      <div class="spacer"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Set current day
+  const days = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  document.getElementById('current-day').textContent = days[new Date().getDay()];
+
+  function showView(name) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+    document.getElementById('tab-' + name).classList.add('active');
+    document.querySelector('.main').scrollTop = 0;
+  }
+</script>
+</body>
+</html>
